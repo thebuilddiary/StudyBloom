@@ -1,17 +1,95 @@
-<!-- Planner -->
 
-<!-- Planner -->
-<section id="planner" class="dashboard-section">
-  <h2>My Planner</h2>
-  <p>Turn your study goals into organised sessions.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#879B83">
 
-  <div class="content-card">
-    <h3>Plan a study session</h3>
+  <title>StudyBloom | Your Study Space</title>
 
-    <form id="planner-form" class="planner-form">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
 
-      <label for="planner-subject">Subject</label>
-      <select id="planner-subject" required>
+<body>
+
+<div class="app-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h1>StudyBloom<span>.</span></h1>
+    <p class="sidebar-subtitle">Your learning space</p>
+
+    <nav>
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#planner" class="nav-link">My Planner</a>
+      <a href="#timetable" class="nav-link">Timetable</a>
+      <a href="#tasks" class="nav-link">My Tasks</a>
+      <a href="#progress" class="nav-link">Progress</a>
+      <a href="#notes" class="nav-link">Notes</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <p>Small steps. Big growth.</p>
+    </div>
+  </aside>
+
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <header class="topbar">
+      <div>
+        <p id="current-date"></p>
+        <h2>Welcome back!</h2>
+        <p>Let's make today productive.</p>
+      </div>
+    </header>
+
+
+    <!-- HOME -->
+    <section id="home" class="dashboard-section">
+
+      <h2>Your study overview</h2>
+
+      <div class="stats-grid">
+
+        <article class="stat-card">
+          <p>Total tasks</p>
+          <h3 id="total-tasks">0</h3>
+        </article>
+
+        <article class="stat-card">
+          <p>Completed</p>
+          <h3 id="completed-tasks">0</h3>
+        </article>
+
+        <article class="stat-card">
+          <p>Remaining</p>
+          <h3 id="remaining-tasks">0</h3>
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- MY PLANNER -->
+    <section id="planner" class="dashboard-section">
+
+      <h2>My Planner</h2>
+      <p>Turn your study goals into organised sessions.</p>
+
+      <div class="content-card">
+
+        <h3>Plan a study session</h3>
+
+        <form id="planner-form" class="planner-form">
+
+          <label for="planner-subject">Subject</label>
+
+          <select id="planner-subject" required>
         <option value="">Choose a subject</option>
         <option>English</option>
         <option>Psychology</option>
@@ -30,35 +108,225 @@
         <option>Computer Science</option>
         <option>Yoga</option>
         <option>Other</option>
-      </select>
+          </select>
 
-      <label for="planner-topic">Chapter or topic</label>
-      <input
-        type="text"
-        id="planner-topic"
-        placeholder="e.g. Human Memory"
-        required
-      >
 
-      <label for="planner-date">Study date</label>
-      <input type="date" id="planner-date" required>
+          <label for="planner-topic">Chapter or topic</label>
 
-      <label for="planner-priority">Priority</label>
-      <select id="planner-priority" required>
-        <option value="High">High</option>
-        <option value="Medium" selected>Medium</option>
-        <option value="Low">Low</option>
-      </select>
+          <input
+            type="text"
+            id="planner-topic"
+            placeholder="e.g. Human Memory"
+            required
+          >
 
-      <button type="submit">Add study session</button>
 
-    </form>
-  </div>
+          <label for="planner-date">Study date</label>
 
-  <div class="content-card">
-    <h3>Your planned sessions</h3>
-    <div id="planner-list">
-      <p class="empty-message">No study sessions planned yet.</p>
-    </div>
-  </div>
-</section>
+          <input
+            type="date"
+            id="planner-date"
+            required
+          >
+
+
+          <label for="planner-priority">Priority</label>
+
+          <select id="planner-priority" required>
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+          </select>
+
+
+          <button type="submit">Add study session</button>
+
+        </form>
+
+      </div>
+
+
+      <div class="content-card">
+
+        <h3>Your planned sessions</h3>
+
+        <div id="planner-list">
+          <p class="empty-message">
+            No study sessions planned yet.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MY TIMETABLE -->
+    <section id="timetable" class="dashboard-section">
+
+      <h2>My Timetable</h2>
+      <p>Build a weekly routine that works for you.</p>
+
+      <div class="content-card">
+
+        <h3>Add a study slot</h3>
+
+        <form id="timetable-form" class="timetable-form">
+
+          <label for="timetable-day">Day</label>
+
+          <select id="timetable-day" required>
+            <option value="">Choose a day</option>
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+            <option>Sunday</option>
+          </select>
+
+
+          <label for="timetable-subject">Subject / Activity</label>
+
+          <input
+            type="text"
+            id="timetable-subject"
+            placeholder="e.g. Psychology or Drawing"
+            required
+          >
+
+
+          <label for="timetable-start">Start time</label>
+
+          <input
+            type="time"
+            id="timetable-start"
+            required
+          >
+
+
+          <label for="timetable-end">End time</label>
+
+          <input
+            type="time"
+            id="timetable-end"
+            required
+          >
+
+
+          <button type="submit">Add time slot</button>
+
+        </form>
+
+      </div>
+
+
+      <div class="content-card">
+
+        <h3>Your weekly schedule</h3>
+
+        <label for="timetable-filter">View day</label>
+
+        <select id="timetable-filter">
+          <option value="All">All days</option>
+          <option>Monday</option>
+          <option>Tuesday</option>
+          <option>Wednesday</option>
+          <option>Thursday</option>
+          <option>Friday</option>
+          <option>Saturday</option>
+          <option>Sunday</option>
+        </select>
+
+        <div id="timetable-list">
+          <p class="empty-message">
+            Your timetable is empty.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MY TASKS -->
+    <section id="tasks" class="dashboard-section">
+
+      <h2>My Tasks</h2>
+      <p>One task at a time.</p>
+
+      <form id="task-form" class="task-form">
+
+        <input
+          type="text"
+          id="task-input"
+          placeholder="What do you need to study?"
+          required
+        >
+
+        <button type="submit">Add task</button>
+
+      </form>
+
+      <div id="task-list" class="content-card">
+
+        <p class="empty-message">
+          No tasks added yet.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROGRESS -->
+    <section id="progress" class="dashboard-section">
+
+      <h2>Your Progress</h2>
+
+      <div class="content-card">
+
+        <p id="progress-text">
+          Complete your first task to start tracking progress.
+        </p>
+
+        <div class="progress-track">
+          <div id="progress-bar"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- NOTES -->
+    <section id="notes" class="dashboard-section">
+
+      <h2>My Notes</h2>
+      <p>A little space for your thoughts and reminders.</p>
+
+      <div class="content-card">
+
+        <textarea
+          id="notes-input"
+          placeholder="Write your notes here..."
+        ></textarea>
+
+        <p id="notes-status">
+          Your notes will be saved automatically.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
