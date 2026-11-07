@@ -1,0 +1,12 @@
+
+{
+  "name": "StudyBloom",
+  "short_name": "StudyBloom",
+  "description": "A modern study planner to organise learning and track progress.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F6F0",
+  "theme_color": "#879B83"
+}
