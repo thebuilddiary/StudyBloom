@@ -27,4 +27,18 @@ overview.innerHTML = `
   </div>
 `;
 
+// Register the service worker
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .then(() => {
+        console.log("StudyBloom offline support is ready!");
+      })
+      .catch((error) => {
+        console.error("Service worker registration failed:", error);
+      });
+  });
+}
+
 console.log("StudyBloom is running!");
