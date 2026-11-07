@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#879B83">
 
-  <title>StudyBloom</title>
+  <title>StudyBloom | Your Study Space</title>
 
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
@@ -14,27 +14,134 @@
 
 <body>
 
-  <div class="app-container">
+<div class="app-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h1>StudyBloom<span>.</span></h1>
+    <p class="sidebar-subtitle">Your learning space</p>
+
+    <nav>
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#planner" class="nav-link">My Planner</a>
+      <a href="#timetable" class="nav-link">Timetable</a>
+      <a href="#tasks" class="nav-link">My Tasks</a>
+      <a href="#progress" class="nav-link">Progress</a>
+      <a href="#notes" class="nav-link">Notes</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <p>Small steps. Big growth.</p>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
 
     <header class="topbar">
-      <h1>StudyBloom</h1>
-      <p>Your space to grow, one day at a time.</p>
+      <div>
+        <p id="current-date"></p>
+        <h2>Welcome back!</h2>
+        <p>Let's make today productive.</p>
+      </div>
     </header>
 
-    <main>
-      <section id="home">
-        <h2>Welcome back!</h2>
-        <p>Ready to make today count?</p>
-      </section>
+    <!-- Home -->
+    <section id="home" class="dashboard-section">
+      <h2>Your study overview</h2>
 
-      <section id="overview">
-        <h2>Your Overview</h2>
-        <div id="overview-content"></div>
-      </section>
-    </main>
+      <div class="stats-grid">
+        <article class="stat-card">
+          <p>Total tasks</p>
+          <h3 id="total-tasks">0</h3>
+        </article>
 
-  </div>
+        <article class="stat-card">
+          <p>Completed</p>
+          <h3 id="completed-tasks">0</h3>
+        </article>
 
-  <script src="script.js"></script>
+        <article class="stat-card">
+          <p>Remaining</p>
+          <h3 id="remaining-tasks">0</h3>
+        </article>
+      </div>
+    </section>
+
+    <!-- Planner -->
+    <section id="planner" class="dashboard-section">
+      <h2>My Planner</h2>
+      <p>Keep your subjects and chapters organised.</p>
+
+      <div class="content-card">
+        <p>Your subject planner will be built here.</p>
+      </div>
+    </section>
+
+    <!-- Timetable -->
+    <section id="timetable" class="dashboard-section">
+      <h2>My Timetable</h2>
+      <p>Give your day a little structure.</p>
+
+      <div class="content-card">
+        <p>Your daily study schedule will appear here.</p>
+      </div>
+    </section>
+
+    <!-- Tasks -->
+    <section id="tasks" class="dashboard-section">
+      <h2>My Tasks</h2>
+      <p>One task at a time.</p>
+
+      <form id="task-form" class="task-form">
+        <input
+          type="text"
+          id="task-input"
+          placeholder="What do you need to study?"
+          required
+        >
+
+        <button type="submit">Add task</button>
+      </form>
+
+      <div id="task-list" class="content-card">
+        <p class="empty-message">No tasks added yet.</p>
+      </div>
+    </section>
+
+    <!-- Progress -->
+    <section id="progress" class="dashboard-section">
+      <h2>Your Progress</h2>
+
+      <div class="content-card">
+        <p id="progress-text">Complete your first task to start tracking progress.</p>
+
+        <div class="progress-track">
+          <div id="progress-bar"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notes -->
+    <section id="notes" class="dashboard-section">
+      <h2>My Notes</h2>
+      <p>A little space for your thoughts and reminders.</p>
+
+      <div class="content-card">
+        <textarea
+          id="notes-input"
+          placeholder="Write your notes here..."
+        ></textarea>
+
+        <p id="notes-status">Your notes will be saved automatically.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>
+
