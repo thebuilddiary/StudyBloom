@@ -1,159 +1,150 @@
 
 /* =================================
-   STUDYBLOOM - INTERACTIVE FEATURES
+   STUDYBLOOM — STUDY PLANNER
 ================================= */
 
-// DATE
-const dateElement = document.getElementById("current-date");
+const plannerForm = document.getElementById("planner-form");
+const plannerList = document.getElementById("planner-list");
 
-const today = new Date();
+const plannerSubject = document.getElementById("planner-subject");
+const plannerTopic = document.getElementById("planner-topic");
+const plannerDate = document.getElementById("planner-date");
+const plannerPriority = document.getElementById("planner-priority");
 
-dateElement.textContent = today.toLocaleDateString("en-IN", {
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-  year: "numeric"
-});
+// Load saved study sessions
+let plannerSessions = JSON.parse(
+  localStorage.getItem("studybloom-planner")
+) || [];
 
-
-// TASK MANAGER
-
-const taskForm = document.getElementById("task-form");
-const taskInput = document.getElementById("task-input");
-const taskList = document.getElementById("task-list");
-
-let tasks = JSON.parse(localStorage.getItem("studybloom-tasks")) || [];
-
-// Save tasks
-function saveTasks() {
-  localStorage.setItem("studybloom-tasks", JSON.stringify(tasks));
+// Save sessions
+function savePlannerSessions() {
+  localStorage.setItem(
+    "studybloom-planner",
+    JSON.stringify(plannerSessions)
+  );
 }
 
-// Update statistics
-function updateProgress() {
-  const total = tasks.length;
-  const completed = tasks.filter(task => task.completed).length;
-  const remaining = total - completed;
+// Format date without timezone shifting
+function formatPlannerDate(dateString) {
+  const [year, month, day] = dateString.split("-").map(Number);
 
-  const percentage = total === 0
-    ? 0
-    : Math.round((completed / total) * 100);
+  const date = new Date(year, month - 1, day);
 
-  document.getElementById("total-tasks").textContent = total;
-  document.getElementById("completed-tasks").textContent = completed;
-  document.getElementById("remaining-tasks").textContent = remaining;
-
-  document.getElementById("progress-bar").style.width =
-    percentage + "%";
-
-  document.getElementById("progress-text").textContent =
-    total === 0
-      ? "Complete your first task to start tracking progress."
-      : `${percentage}% completed — ${completed} of ${total} tasks finished.`;
+  return date.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
 }
 
-// Display tasks
-function renderTasks() {
-  taskList.innerHTML = "";
+// Display planned sessions
+function renderPlannerSessions() {
+  plannerList.innerHTML = "";
 
-  if (tasks.length === 0) {
+  if (plannerSessions.length === 0) {
     const message = document.createElement("p");
     message.className = "empty-message";
-    message.textContent = "No tasks added yet.";
-    taskList.appendChild(message);
+    message.textContent = "No study sessions planned yet.";
+    plannerList.appendChild(message);
+    return;
   }
 
-  tasks.forEach(task => {
-    const item = document.createElement("div");
-    item.className = "task-item";
+  const sortedSessions = [...plannerSessions].sort(
+    (a, b) => a.date.localeCompare(b.date)
+  );
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = task.completed;
+  sortedSessions.forEach(session => {
+    const card = document.createElement("div");
+    card.className = "planner-session";
 
-    checkbox.addEventListener("change", () => {
-      task.completed = checkbox.checked;
-      saveTasks();
-      renderTasks();
-    });
-
-    const taskName = document.createElement("span");
-    taskName.textContent = task.name;
-
-    if (task.completed) {
-      taskName.classList.add("completed");
+    if (session.completed) {
+      card.classList.add("completed");
     }
+
+    const top = document.createElement("div");
+    top.className = "planner-session-top";
+
+    const details = document.createElement("div");
+
+    const heading = document.createElement("h4");
+    heading.textContent = session.topic;
+
+    const subject = document.createElement("p");
+    subject.textContent = session.subject;
+
+    const date = document.createElement("p");
+    date.textContent = formatPlannerDate(session.date);
+
+    const priority = document.createElement("span");
+    priority.className = "priority-label";
+    priority.textContent = session.priority + " priority";
+
+    details.append(heading, subject, date, priority);
+    top.appendChild(details);
+
+    const actions = document.createElement("div");
+    actions.className = "planner-session-actions";
+
+    const completeButton = document.createElement("button");
+    completeButton.type = "button";
+    completeButton.textContent = session.completed
+      ? "Mark incomplete"
+      : "Mark complete";
+
+    completeButton.addEventListener("click", () => {
+      session.completed = !session.completed;
+      savePlannerSessions();
+      renderPlannerSessions();
+    });
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
+    deleteButton.className = "delete-planner-session";
     deleteButton.textContent = "Delete";
-    deleteButton.className = "delete-task";
 
     deleteButton.addEventListener("click", () => {
-      tasks = tasks.filter(t => t.id !== task.id);
-      saveTasks();
-      renderTasks();
+      plannerSessions = plannerSessions.filter(
+        item => item.id !== session.id
+      );
+
+      savePlannerSessions();
+      renderPlannerSessions();
     });
 
-    item.append(checkbox, taskName, deleteButton);
-    taskList.appendChild(item);
-  });
+    actions.append(completeButton, deleteButton);
+    card.append(top, actions);
 
-  updateProgress();
+    plannerList.appendChild(card);
+  });
 }
 
-// Add a task
-taskForm.addEventListener("submit", (event) => {
+// Add a new study session
+plannerForm.addEventListener("submit", event => {
   event.preventDefault();
 
-  const taskName = taskInput.value.trim();
-
-  if (taskName === "") return;
-
-  tasks.push({
+  const session = {
     id: Date.now() + Math.random(),
-    name: taskName,
+    subject: plannerSubject.value,
+    topic: plannerTopic.value.trim(),
+    date: plannerDate.value,
+    priority: plannerPriority.value,
     completed: false
-  });
+  };
 
-  saveTasks();
-  renderTasks();
+  if (!session.subject || !session.topic || !session.date) {
+    return;
+  }
 
-  taskInput.value = "";
-  taskInput.focus();
+  plannerSessions.push(session);
+
+  savePlannerSessions();
+  renderPlannerSessions();
+
+  plannerForm.reset();
+  plannerPriority.value = "Medium";
 });
 
-// Load saved tasks
-renderTasks();
+// Show previously saved sessions
+renderPlannerSessions();
 
-
-// NOTES
-
-const notesInput = document.getElementById("notes-input");
-const notesStatus = document.getElementById("notes-status");
-
-// Load previously saved notes
-notesInput.value = localStorage.getItem("studybloom-notes") || "";
-
-// Save notes automatically
-notesInput.addEventListener("input", () => {
-  localStorage.setItem("studybloom-notes", notesInput.value);
-  notesStatus.textContent = "Saved automatically ✓";
-});
-
-
-// SERVICE WORKER
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js")
-      .then(() => {
-        console.log("StudyBloom offline support is ready!");
-      })
-      .catch(error => {
-        console.error("Service worker error:", error);
-      });
-  });
-}
-
-console.log("StudyBloom is running!");
+console.log("StudyBloom planner is ready!");
