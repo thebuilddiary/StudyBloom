@@ -322,3 +322,110 @@ button, input, textarea {
     gap: 8px;
   }
 }
+
+/* =================================
+   STUDY PLANNER
+================================= */
+
+.planner-form {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.planner-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 8px;
+}
+
+.planner-form input,
+.planner-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--white);
+  color: var(--text);
+  outline: none;
+}
+
+.planner-form input:focus,
+.planner-form select:focus {
+  border-color: var(--sage);
+}
+
+.planner-form button {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--dark-sage);
+  color: white;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.planner-form button:hover {
+  background: #52664F;
+}
+
+.planner-session {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.planner-session:last-child {
+  border-bottom: none;
+}
+
+.planner-session-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.planner-session h4 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.planner-session p {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.planner-session.completed h4 {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.planner-session-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.planner-session-actions button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--dark-sage);
+}
+
+.planner-session-actions .delete-planner-session {
+  color: #A16F69;
+}
+
+.priority-label {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--pale-sage);
+  color: var(--dark-sage);
+}
