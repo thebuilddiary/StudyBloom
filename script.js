@@ -1,150 +1,146 @@
 
 /* =================================
-   STUDYBLOOM — STUDY PLANNER
+   STUDYBLOOM — WEEKLY TIMETABLE
 ================================= */
 
-const plannerForm = document.getElementById("planner-form");
-const plannerList = document.getElementById("planner-list");
+const timetableForm = document.getElementById("timetable-form");
+const timetableList = document.getElementById("timetable-list");
+const timetableFilter = document.getElementById("timetable-filter");
 
-const plannerSubject = document.getElementById("planner-subject");
-const plannerTopic = document.getElementById("planner-topic");
-const plannerDate = document.getElementById("planner-date");
-const plannerPriority = document.getElementById("planner-priority");
+const timetableDay = document.getElementById("timetable-day");
+const timetableSubject = document.getElementById("timetable-subject");
+const timetableStart = document.getElementById("timetable-start");
+const timetableEnd = document.getElementById("timetable-end");
 
-// Load saved study sessions
-let plannerSessions = JSON.parse(
-  localStorage.getItem("studybloom-planner")
+// Load saved timetable
+let timetableSlots = JSON.parse(
+  localStorage.getItem("studybloom-timetable")
 ) || [];
 
-// Save sessions
-function savePlannerSessions() {
+// Save timetable
+function saveTimetable() {
   localStorage.setItem(
-    "studybloom-planner",
-    JSON.stringify(plannerSessions)
+    "studybloom-timetable",
+    JSON.stringify(timetableSlots)
   );
 }
 
-// Format date without timezone shifting
-function formatPlannerDate(dateString) {
-  const [year, month, day] = dateString.split("-").map(Number);
+// Weekday order
+const weekdayOrder = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday"
+];
 
-  const date = new Date(year, month - 1, day);
+// Display timetable
+function renderTimetable() {
+  timetableList.innerHTML = "";
 
-  return date.toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric"
+  const selectedDay = timetableFilter.value;
+
+  let visibleSlots = [...timetableSlots];
+
+  if (selectedDay !== "All") {
+    visibleSlots = visibleSlots.filter(
+      slot => slot.day === selectedDay
+    );
+  }
+
+  visibleSlots.sort((a, b) => {
+    const dayDifference =
+      weekdayOrder.indexOf(a.day) -
+      weekdayOrder.indexOf(b.day);
+
+    if (dayDifference !== 0) return dayDifference;
+
+    return a.start.localeCompare(b.start);
   });
-}
 
-// Display planned sessions
-function renderPlannerSessions() {
-  plannerList.innerHTML = "";
-
-  if (plannerSessions.length === 0) {
+  if (visibleSlots.length === 0) {
     const message = document.createElement("p");
     message.className = "empty-message";
-    message.textContent = "No study sessions planned yet.";
-    plannerList.appendChild(message);
+    message.textContent = selectedDay === "All"
+      ? "Your timetable is empty."
+      : `No study slots planned for ${selectedDay}.`;
+
+    timetableList.appendChild(message);
     return;
   }
 
-  const sortedSessions = [...plannerSessions].sort(
-    (a, b) => a.date.localeCompare(b.date)
-  );
-
-  sortedSessions.forEach(session => {
+  visibleSlots.forEach(slot => {
     const card = document.createElement("div");
-    card.className = "planner-session";
-
-    if (session.completed) {
-      card.classList.add("completed");
-    }
-
-    const top = document.createElement("div");
-    top.className = "planner-session-top";
+    card.className = "timetable-slot";
 
     const details = document.createElement("div");
 
     const heading = document.createElement("h4");
-    heading.textContent = session.topic;
+    heading.textContent = slot.subject;
 
-    const subject = document.createElement("p");
-    subject.textContent = session.subject;
+    const day = document.createElement("p");
+    day.textContent = slot.day;
 
-    const date = document.createElement("p");
-    date.textContent = formatPlannerDate(session.date);
+    const time = document.createElement("p");
+    time.textContent = `${slot.start} – ${slot.end}`;
 
-    const priority = document.createElement("span");
-    priority.className = "priority-label";
-    priority.textContent = session.priority + " priority";
-
-    details.append(heading, subject, date, priority);
-    top.appendChild(details);
-
-    const actions = document.createElement("div");
-    actions.className = "planner-session-actions";
-
-    const completeButton = document.createElement("button");
-    completeButton.type = "button";
-    completeButton.textContent = session.completed
-      ? "Mark incomplete"
-      : "Mark complete";
-
-    completeButton.addEventListener("click", () => {
-      session.completed = !session.completed;
-      savePlannerSessions();
-      renderPlannerSessions();
-    });
+    details.append(heading, day, time);
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
-    deleteButton.className = "delete-planner-session";
+    deleteButton.className = "delete-timetable-slot";
     deleteButton.textContent = "Delete";
 
     deleteButton.addEventListener("click", () => {
-      plannerSessions = plannerSessions.filter(
-        item => item.id !== session.id
+      timetableSlots = timetableSlots.filter(
+        item => item.id !== slot.id
       );
 
-      savePlannerSessions();
-      renderPlannerSessions();
+      saveTimetable();
+      renderTimetable();
     });
 
-    actions.append(completeButton, deleteButton);
-    card.append(top, actions);
-
-    plannerList.appendChild(card);
+    card.append(details, deleteButton);
+    timetableList.appendChild(card);
   });
 }
 
-// Add a new study session
-plannerForm.addEventListener("submit", event => {
+// Add a timetable slot
+timetableForm.addEventListener("submit", event => {
   event.preventDefault();
 
-  const session = {
-    id: Date.now() + Math.random(),
-    subject: plannerSubject.value,
-    topic: plannerTopic.value.trim(),
-    date: plannerDate.value,
-    priority: plannerPriority.value,
-    completed: false
-  };
+  const start = timetableStart.value;
+  const end = timetableEnd.value;
 
-  if (!session.subject || !session.topic || !session.date) {
+  if (start >= end) {
+    alert("End time must be later than start time.");
     return;
   }
 
-  plannerSessions.push(session);
+  const newSlot = {
+    id: Date.now() + Math.random(),
+    day: timetableDay.value,
+    subject: timetableSubject.value.trim(),
+    start: start,
+    end: end
+  };
 
-  savePlannerSessions();
-  renderPlannerSessions();
+  if (!newSlot.day || !newSlot.subject) return;
 
-  plannerForm.reset();
-  plannerPriority.value = "Medium";
+  timetableSlots.push(newSlot);
+
+  saveTimetable();
+  renderTimetable();
+
+  timetableForm.reset();
 });
 
-// Show previously saved sessions
-renderPlannerSessions();
+// Change day filter
+timetableFilter.addEventListener("change", renderTimetable);
 
-console.log("StudyBloom planner is ready!");
+// Display saved slots
+renderTimetable();
+
+console.log("StudyBloom timetable is ready!");
